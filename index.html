@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Gantt Chart</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <style>
+        #chart_div {
+            margin: 5px auto;
+            width: 95%;
+        }
+    </style>
+</head>
+<body>
+<h1 class="text-center">COMP3320 Gantt Chart</h1>
+
+<div id="chart_div"></div>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    var options = {
+        height: 2730,
+        gantt: {
+            labelStyle: {
+                fontName: 'Roboto',
+                fontSize: 14,
+                color: '#757575'
+            },
+            criticalPathEnabled: true,
+            criticalPathStyle: {
+                stroke: '#e64a19',
+                strokeWidth: 5
+            }
+        }
+    };
+
+    var rows = [
+        // Documentation
+        [
+            'project-proposal', 'Project Proposal', 'Documentation',
+            new Date(2017, 7, 4), new Date(2017, 7, 11), weeks(1),
+            100,
+            [
+
+            ].join(',')
+        ],
+        [
+            'project-report', 'Project Report', 'Documentation',
+            new Date(2017, 9, 20), new Date(2017, 9, 27), weeks(1),
+            0,
+            [
+
+            ].join(',')
+        ],
+
+        // Presentations
+        [
+            'presentation-background-title', 'Background Presentation Title', 'Presentation',
+            new Date(2017, 7, 17), new Date(2017, 7, 18), days(1),
+            0,
+            [
+
+            ].join(',')
+        ],
+        [
+            'presentation-background', 'Background Presentation', 'Presentation',
+            new Date(2017, 8, 1), new Date(2017, 8, 8), weeks(1),
+            0,
+            [
+                'presentation-background-title'
+            ].join(',')
+        ],
+        [
+            'presentation-final', 'Final Presentation', 'Presentation',
+            new Date(2017, 9, 20), new Date(2017, 9, 27), weeks(1),
+            0,
+            [
+                'presentation-background'
+            ].join(',')
+        ],
+
+        // Modules
+        [
+            'module-1', 'Module 1', 'Development',
+            new Date(2017, 7, 18), new Date(2017, 8, 15), weeks(4),
+            0,
+            [
+
+            ].join(',')
+        ],
+        [
+            'module-2', 'Module 2', 'Development',
+            new Date(2017, 8, 15), new Date(2017, 9, 13), weeks(5),
+            0,
+            [
+                'module-1'
+            ].join(',')
+        ]
+    ];
+
+    google.charts.load('current', {'packages': ['gantt']});
+    google.charts.setOnLoadCallback(drawChart);
+
+    function days(days) {
+        return days * 24 * 60 * 60 * 1000;
+    }
+
+    function weeks(weeks) {
+        return weeks * days(7);
+    }
+
+    function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Task ID');
+        data.addColumn('string', 'Task Name');
+        data.addColumn('string', 'Resource');
+        data.addColumn('date', 'Start');
+        data.addColumn('date', 'End');
+        data.addColumn('number', 'Duration');
+        data.addColumn('number', 'Percent Complete');
+        data.addColumn('string', 'Dependencies');
+
+        data.addRows(rows);
+
+        var chart = new google.visualization.Gantt(document.getElementById('chart_div'));
+
+        chart.draw(data, options);
+    }
+</script>
+</body>
+</html>
